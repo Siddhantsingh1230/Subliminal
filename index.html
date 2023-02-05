@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+
+<html lang="en">
+
+  <head>
+
+    <meta charset="UTF-8" />
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <meta http-equiv="X-UA-Compatible" content="ie=edge" />
+
+    <title>Subliminal</title>
+
+    <style type="text/css" media="all">
+
+      * {
+
+        margin: 0px;
+
+        padding: 0px;
+
+      }
+
+      body {
+
+        height: 100vh;
+
+        width: 100vw;
+
+        overflow: hidden;
+
+      }
+
+      canvas {
+
+        background: black;
+
+      }
+
+    </style>
+
+  </head>
+
+  <body>
+
+    <canvas id="canvas"></canvas>
+
+    <script type="text/javascript" charset="utf-8">
+
+      // Environment
+
+      const canvas = document.getElementById("canvas");
+
+      const ctx = canvas.getContext("2d");
+
+      canvas.width = window.innerWidth;
+
+      canvas.height = window.innerHeight;
+
+      // for drawing on canvas
+
+      function draw(x, y, color, side) {
+
+        ctx.fillStyle = color;
+
+        ctx.fillRect(x, y, side, side);
+
+      }
+
+      // particles array
+
+      let particles = [];
+
+      let vx = 0;
+
+      let vy = 0;
+
+      //particle blueprint (class)
+
+      particle = (x, y, c) => {
+
+        return { x: x, y: y, vx: vx, vy: vy, color: c };
+
+      };
+
+      // generate random pos
+
+      function randomX() {
+
+        return Math.random() * innerWidth;
+
+      }
+
+      function randomY() {
+
+        return Math.random() * innerHeight;
+
+      }
+
+      function randomize() {
+
+        let val;
+
+        if (Math.random() < 0.5) {
+
+          val = -1 * Math.random() * 1.1;
+
+          console.log(val);
+
+          return val;
+
+        } else {
+
+          val = 1 * Math.random() * 1.1;
+
+          console.log(val);
+
+          return val;
+
+        }
+
+      }
+
+      //creating particles
+
+      function create(num, color) {
+
+        collection = [];
+
+        for (let i = 0; i < num; i++) {
+
+          collection.push(particle(randomX(), randomY(), color));
+
+          particles.push(collection[i]);
+
+        }
+
+        return collection;
+
+      }
+
+      //console.log(innerWidth)
+
+      // rules
+
+      let limit = innerWidth / 2;
+
+      console.log(limit);
+
+      function rule(particle1, particle2, g) {
+
+        for (let i = 0; i < particle1.length; i++) {
+
+          let fx = 0;
+
+          let fy = 0;
+
+          let a;
+
+          let b;
+
+          let d;
+
+          for (let j = 0; j < particle2.length; j++) {
+
+            a = particle1[i];
+
+            b = particle2[j];
+
+            let dx = a.x - b.x;
+
+            let dy = a.y - b.y;
+
+            d = Math.sqrt(Math.pow(dx, 2) + Math.pow(dy, 2));
+
+            if (d > 0 && d < limit) {
+
+              f = (g * 1) / d;
+
+              fx += f * dx;
+
+              fy += f * dy;
+
+            }
+
+          }
+
+          a.vx = (a.vx + fx) * 0.5;
+
+          a.vy = (a.vy + fy) * 0.5;
+
+          a.x += a.vx;
+
+          a.y += a.vy;
+
+          if (a.x <= 0 || a.x >= innerWidth) {
+
+            a.vx *= -1;
+
+          }
+
+          if (a.y <= 0 || a.y >= innerHeight) {
+
+            a.vy *= -1;
+
+          }
+
+        }
+
+      }
+
+      //Creation of particle of type a,b
+
+      let a = create(250, "lightskyblue");
+
+      let b = create(250, "deeppink");
+
+      let c = create(250, "lightgreen");
+
+      //Frame Updation
+
+      val1 = randomize();
+
+      val2 = randomize();
+
+      val3 = randomize();
+
+      val4 = randomize();
+
+      val5 = randomize();
+
+      val6 = randomize();
+
+      val7 = randomize();
+
+      val8 = randomize();
+
+      val9 = randomize();
+
+      function update() {
+
+        rule(a, a, val1);
+
+        rule(b, a, val2);
+
+        rule(c, a, val3);
+
+        rule(b, b, val4);
+
+        rule(a, b, val5);
+
+        rule(c, b, val6);
+
+        rule(c, c, val7);
+
+        rule(a, c, val8);
+
+        rule(b, c, val9);
+
+        ctx.clearRect(0, 0, innerWidth, innerHeight);
+
+        for (let i = 0; i < particles.length; i++) {
+
+          draw(particles[i].x, particles[i].y, particles[i].color, 5);
+
+        }
+
+        requestAnimationFrame(update);
+
+      }
+
+      update();
+
+    </script>
+
+  </body>
+
+</html>
+
